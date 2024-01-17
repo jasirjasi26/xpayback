@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import '../models/employee_details_model.dart';
-import '../services/all_data_service.dart';
+import '../services/employee_data_service.dart';
 
 class EmployeeDataController extends GetxController {
   var employees = [].obs;
@@ -20,10 +20,10 @@ class EmployeeDataController extends GetxController {
     try {
       var allDataList = await EmployeeDataService.fetchEmployeeList(offset);
       if (allDataList != null) {
-        allDataList.users.forEach((element) {
+        for (var element in allDataList.users) {
           employees.add(element);
           update();
-        });
+        }
       }
     } finally {
       isLoading = false;
