@@ -20,10 +20,10 @@ class EmployeeDataController extends GetxController {
     try {
       var allDataList = await EmployeeDataService.fetchEmployeeList(offset);
       if (allDataList != null) {
-        for (var element in allDataList.users) {
+        allDataList.users.forEach((element) {
           employees.add(element);
           update();
-        }
+        });
       }
     } finally {
       isLoading = false;

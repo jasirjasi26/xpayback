@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/views/home_page.dart';
 
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'XpayBack',
+      title:'XpayBack',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

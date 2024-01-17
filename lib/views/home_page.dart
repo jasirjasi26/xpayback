@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
 import '../controllers/employee_data_controller.dart';
 import 'employee_details_page.dart';
+import 'package:flutter/foundation.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -40,70 +42,11 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
-  Widget setPage() {
-    Color? colorTheme = Colors.blue[300];
-
-    return Stack(
-      children: <Widget>[
-        Container(
-          // Background
-          color: colorTheme,
-          height: MediaQuery.of(context).size.height * 0.205,
-          width: MediaQuery.of(context).size.width,
-        ),
-        Positioned(
-          // To take AppBar Size only
-          top: 100.0,
-          left: 20.0,
-          right: 20.0,
-          child: AppBar(
-            backgroundColor: Colors.white,
-            leading: IconButton(
-              icon: Icon(Icons.search, color: colorTheme),
-              onPressed: () {},
-            ),
-            primary: false,
-            title: TextField(
-                controller: search,
-                onChanged: (data) {
-                  setState(() {
-                    searchValue = search.text;
-                  });
-                },
-                decoration: const InputDecoration(
-                    hintText: "Search",
-                    border: InputBorder.none,
-                    hintStyle: TextStyle(color: Colors.grey))),
-            actions: <Widget>[
-              search.text.isNotEmpty
-                  ? InkWell(
-                      onTap: () {
-                        search.text = "";
-                        searchValue = "";
-                        setState(() {});
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.close,
-                          size: 22.0,
-                          color: colorTheme,
-                        ),
-                      ),
-                    )
-                  : Container(),
-            ],
-          ),
-        )
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(120),
+        preferredSize: const Size.fromHeight(kIsWeb ? 170 : 120),
         child: setPage(),
       ),
       body: SafeArea(
@@ -180,22 +123,26 @@ class _MyHomePageState extends State<MyHomePage> {
                     },
                   )
                 ),
-                controller.isLoading
-                    ? Positioned(
-                  bottom: 10,
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                      child: SizedBox(
-                          height: 30,
-                          width: 30,
-                          child: CupertinoActivityIndicator(
-                            color: Colors.grey[900],
-                          )),
-                    ),
-                  ),
-                )
-                    : Container()
+                GetBuilder<EmployeeDataController>(
+                  builder: (controller1) {
+                   return controller1.isLoading
+                       ? Positioned(
+                     bottom: 10,
+                     child: SizedBox(
+                       width: MediaQuery.of(context).size.width,
+                       child: Center(
+                         child: SizedBox(
+                             height: 30,
+                             width: 30,
+                             child: CupertinoActivityIndicator(
+                               color: Colors.grey[900],
+                             )),
+                       ),
+                     ),
+                   )
+                       : Container();
+                  },
+                ),
               ],
             ) : Center(
               child: SizedBox(
@@ -210,4 +157,64 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
+  Widget setPage() {
+    Color? colorTheme = Colors.blue[300];
+
+    return Stack(
+      children: <Widget>[
+        Container(
+          // Background
+          color: colorTheme,
+          height:kIsWeb ? 170 : MediaQuery.of(context).size.height * 0.21,
+          width: MediaQuery.of(context).size.width,
+        ),
+        Positioned(
+          // To take AppBar Size only
+          top: 100.0,
+          left: 20.0,
+          right: 20.0,
+          child: AppBar(
+            backgroundColor: Colors.white,
+            leading: IconButton(
+              icon: Icon(Icons.search, color: colorTheme),
+              onPressed: () {},
+            ),
+            primary: false,
+            title: TextField(
+                controller: search,
+                onChanged: (data) {
+                  setState(() {
+                    searchValue = search.text;
+                  });
+                },
+                decoration: const InputDecoration(
+                    hintText: "Search",
+                    border: InputBorder.none,
+                    hintStyle: TextStyle(color: Colors.grey))),
+            actions: <Widget>[
+              search.text.isNotEmpty
+                  ? InkWell(
+                onTap: () {
+                  search.text = "";
+                  searchValue = "";
+                  setState(() {});
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.close,
+                    size: 22.0,
+                    color: colorTheme,
+                  ),
+                ),
+              )
+                  : Container(),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
 }
